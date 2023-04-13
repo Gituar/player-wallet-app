@@ -1,0 +1,315 @@
+# https://editor.swagger.io/
+
+openapi: 3.0.3
+info:
+  title: Player Wallet API
+  version: 1.0.0
+  description: API for managing player wallets and play sessions.
+servers:
+  - url: http://localhost:3000/
+paths:
+  /players/{playerId}/wallet:
+    post:
+      summary: Create a wallet for a player
+      parameters:
+        - in: path
+          name: playerId
+          schema:
+            type: integer
+            minimum: 1
+          required: true
+          description: ID of the player to create a wallet for
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                balance:
+                  type: number
+                  format: float
+                  minimum: 0
+                  description: Initial balance of the wallet
+              required:
+                - balance
+            example:
+              balance: 20.00
+      responses:
+        '201':
+          description: Created
+        '400':
+          description: Bad request
+        '500':
+          description: Internal server error
+    get:
+      summary: Get the wallet of a player
+      parameters:
+        - in: path
+          name: playerId
+          schema:
+            type: integer
+            minimum: 1
+          required: true
+          description: ID of the player to get the wallet for
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                    description: ID of the wallet
+                    example: 1
+                  balance:
+                    type: number
+                    format: float
+                    minimum: 0
+                    description: Current balance of the wallet
+        '404':
+          description: Not found
+        '500':
+          description: Internal server error
+  /players/{playerId}/sessions:
+    post:
+      summary: Create a play session for a player
+      parameters:
+        - in: path
+          name: playerId
+          schema:
+            type: integer
+            minimum: 1
+          required: true
+          description: ID of the player to create a session for
+      responses:
+        '201':
+          description: Created
+        '400':
+          description: Bad request
+        '500':
+          description: Internal server error
+    get:
+      summary: Get the play sessions of a player
+      parameters:
+        - in: path
+          name: playerId
+          schema:
+            type: integer
+            minimum: 1
+          required: true
+          description: ID of the player to get the sessions for
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Session'
+        '404':
+          description: Not found
+        '500':
+          description: Internal server error
+  /players/{playerId}/sessions/{sessionId}/withdrawals:
+    post:
+      summary: Make a withdraw or bet transaction in a play session
+      parameters:
+        - in: path
+          name: playerId
+          schema:
+            type: integer
+            minimum: 1
+          required: true
+          description: ID of the player who made the transaction
+        - in: path
+          name: sessionId
+          schema:
+            type: integer
+            minimum: 1
+          required: true
+          description: ID of the play session the transaction belongs to
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/WithdrawOrBet'
+            examples:
+              example1:
+                value:
+                  amount: 5.00
+                  type: withdraw
+      responses:
+        '201':
+          description: Created
+        '400':
+          description: Bad request
+        '404':
+          description: Not found
+        '500':
+          description: Internal server error
+  /players/{playerId}/sessions/{sessionId}/deposits:
+    post:
+      summary: Make a deposit or win transaction in a play session
+      parameters:
+        - in: path
+          name: playerId
+          schema:
+            type: integer
+            minimum: 1
+          required: true
+          description: ID of the player who made the transaction
+        - in: path
+          name: sessionId
+          schema:
+            type: integer
+            minimum: 1
+          required: true
+          description: ID of the play session the transaction belongs to
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DepositOrWin'
+            examples:
+              example1:
+                value:
+                  amount: 10.00
+                  type: deposit
+      responses:
+        '201':
+          description: Created
+        '400':
+          description: Bad request
+        '404':
+          description: Not found
+        '500':
+          description: Internal server error
+  /players/{playerId}/sessions/{sessionId}/transactions:
+    get:
+      summary: Get all transactions for a player in a play session
+      parameters:
+        - in: path
+          name: playerId
+          schema:
+            type: integer
+            minimum: 1
+          required: true
+          description: ID of the player who made the transaction
+        - in: path
+          name: sessionId
+          schema:
+            type: integer
+            minimum: 1
+          required: true
+          description: ID of the play session the transaction belongs to
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Transaction'
+        '404':
+          description: Not found
+        '500':
+          description: Internal server error
+components:
+  schemas:
+    WithdrawOrBet:
+      type: object
+      properties:
+        amount:
+          type: number
+          format: float
+          minimum: 0
+          description: Amount of the transaction (negative)
+          example: 5.0
+        type:
+          type: string
+          enum: [withdraw, bet]
+          description: Type of the transaction
+          example: withdraw
+      required:
+        - amount
+        - type
+    DepositOrWin:
+      type: object
+      properties:
+        amount:
+          type: number
+          format: float
+          minimum: 0
+          description: Amount of the transaction (positive)
+          example: 10.0
+        type:
+          type: string
+          enum: [deposit, win]
+          description: Type of the transaction
+          example: deposit
+      required:
+        - amount
+        - type
+    Transaction:
+      type: object
+      properties:
+        id:
+          type: integer
+          description: ID of the transaction
+          example: 1
+        walletId:
+          type: integer
+          description: ID of the wallet
+          example: 1
+        sessionId:
+          type: integer
+          description: ID of the play session the transaction belongs to
+          example: 1
+        type:
+          type: string
+          enum: [withdraw, bet, deposit, win]
+          description: Type of the transaction
+          example: deposit
+        amount:
+          type: number
+          format: float
+          description: Amount of the transaction
+          example: 5.0
+        balance:
+          type: number
+          format: float
+          description: Balance after the transaction
+          example: 20.0
+        timestamp:
+          type: string
+          format: date-time
+          description: Timestamp of the transaction
+          example: '2023-04-13T11:00:00.000Z'
+    Session:
+      type: object
+      properties:
+        id:
+          type: integer
+          description: ID of the session
+          example: 1
+        playerId:
+          type: integer
+          description: ID of the player
+          example: 1
+        startTime:
+          type: string
+          format: date-time
+          description: Start time of the session
+          example: '2023-04-13T10:00:00.000Z'
+        endTime:
+          type: string
+          format: date-time
+          description: End time of the session (null if ongoing)
+          example: '2023-04-13T12:00:00.000Z'
