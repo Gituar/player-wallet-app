@@ -1,0 +1,41 @@
+// https://dbdiagram.io/d
+
+// This table stores information about the players, including their name and ID. A player can only have one wallet.
+Table players {
+  id serial [primary key]
+  name text [not null]
+}
+
+// This table stores information about the wallets, including the balance and the player ID.
+Table wallets {
+  id serial [primary key]
+  balance numeric [not null]
+  player_id integer [not null]
+}
+
+// This table stores information about the sessions, including the start and end times, the player ID, and the session ID.
+Table sessions {
+  id serial [primary key]
+  player_id integer [not null]
+  start_time timestamp [not null]
+  end_time timestamp [not null]
+}
+
+// This table stores information about the transactions, including the transaction ID, the wallet ID, the session ID, the amount, the transaction type, and the balance at the time of the transaction.
+Table transactions {
+  id serial [primary key]
+  wallet_id integer [not null]
+  session_id integer
+  amount numeric [not null]
+  type text [not null]
+  balance numeric [not null]
+  created_at timestamp [not null]
+}
+
+Ref: wallets.player_id > players.id
+
+Ref: sessions.player_id > players.id
+
+Ref: transactions.wallet_id > wallets.id
+
+Ref: transactions.session_id > sessions.id
