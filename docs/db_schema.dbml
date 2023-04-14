@@ -17,8 +17,8 @@ Table wallets {
 Table sessions {
   id serial [primary key]
   player_id integer [not null]
-  start_time timestamp [not null]
-  end_time timestamp [not null]
+  created_at timestamp [not null]
+  ended_at timestamp [not null]
 }
 
 enum transaction_type {
