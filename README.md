@@ -29,9 +29,10 @@ The application exposes the following endpoints:
 - `GET /players/:playerId/wallet`: Get the wallet of a player.
 - `POST /players/:playerId/sessions`: Create a new play session for a player.
 - `GET /players/:playerId/sessions`: Get all play sessions for a player.
-- `POST /players/:playerId/sessions/:sessionId/withdrawals`: Make a withdrawal or bet transaction within a session.
-- `POST /players/:playerId/sessions/:sessionId/deposits`: Make a deposit or win transaction within a play session.
-- `GET /players/:playerId/sessions/:sessionId/transactions`: Retrieve all transactions for a player in a play session.
+- `POST /sessions/:sessionId/withdrawals`: Make a withdrawal or bet transaction within a session.
+- `POST /sessions/:sessionId/deposits`: Make a deposit or win transaction within a play session.
+- `GET /players/:playerId/transactions`: Retrieve all transactions for a player.
+- `GET /sessions/:sessionId/transactions`: Retrieve all transactions in a play session.
 
 [API Documentation](https://gituar.github.io/player-wallet-app/swagger-ui)
 
