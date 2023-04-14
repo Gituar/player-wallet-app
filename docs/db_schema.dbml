@@ -21,13 +21,21 @@ Table sessions {
   end_time timestamp [not null]
 }
 
+enum transaction_type {
+    withdraw
+    bet
+    deposit
+    win
+}
+
 // This table stores information about the transactions, including the transaction ID, the wallet ID, the session ID, the amount, the transaction type, and the balance at the time of the transaction.
 Table transactions {
   id serial [primary key]
+  player_id integer [not null]
   wallet_id integer [not null]
   session_id integer
   amount numeric [not null]
-  type text [not null]
+  type transaction_type [not null]
   balance numeric [not null]
   created_at timestamp [not null]
 }
@@ -35,6 +43,8 @@ Table transactions {
 Ref: wallets.player_id > players.id
 
 Ref: sessions.player_id > players.id
+
+Ref: transactions.player_id > players.id
 
 Ref: transactions.wallet_id > wallets.id
 

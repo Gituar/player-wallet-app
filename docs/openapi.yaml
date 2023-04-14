@@ -114,17 +114,10 @@ paths:
           description: Not found
         '500':
           description: Internal server error
-  /players/{playerId}/sessions/{sessionId}/withdrawals:
+  /sessions/{sessionId}/withdrawals:
     post:
       summary: Make a withdraw or bet transaction in a play session
       parameters:
-        - in: path
-          name: playerId
-          schema:
-            type: integer
-            minimum: 1
-          required: true
-          description: ID of the player who made the transaction
         - in: path
           name: sessionId
           schema:
@@ -152,17 +145,10 @@ paths:
           description: Not found
         '500':
           description: Internal server error
-  /players/{playerId}/sessions/{sessionId}/deposits:
+  /sessions/{sessionId}/deposits:
     post:
       summary: Make a deposit or win transaction in a play session
       parameters:
-        - in: path
-          name: playerId
-          schema:
-            type: integer
-            minimum: 1
-          required: true
-          description: ID of the player who made the transaction
         - in: path
           name: sessionId
           schema:
@@ -190,9 +176,9 @@ paths:
           description: Not found
         '500':
           description: Internal server error
-  /players/{playerId}/sessions/{sessionId}/transactions:
+  /players/{playerId}/transactions:
     get:
-      summary: Get all transactions for a player in a play session
+      summary: Get all transactions for a player
       parameters:
         - in: path
           name: playerId
@@ -201,6 +187,23 @@ paths:
             minimum: 1
           required: true
           description: ID of the player who made the transaction
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Transaction'
+        '404':
+          description: Not found
+        '500':
+          description: Internal server error
+  /sessions/{sessionId}/transactions:
+    get:
+      summary: Get all transactions in a play session
+      parameters:
         - in: path
           name: sessionId
           schema:
@@ -263,6 +266,10 @@ components:
         id:
           type: integer
           description: ID of the transaction
+          example: 1
+        playerId:
+          type: integer
+          description: ID of the player
           example: 1
         walletId:
           type: integer
