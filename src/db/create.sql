@@ -16,7 +16,8 @@ CREATE UNIQUE INDEX idx_wallets_player_id ON wallets(player_id);
 CREATE TABLE sessions (
   id SERIAL PRIMARY KEY,
   player_id INTEGER NOT NULL REFERENCES players(id) ON DELETE CASCADE,
-  created_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT NOW()
+  created_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT NOW(),
+  ended_at TIMESTAMP WITH TIME ZONE DEFAULT NULL
 );
 
 CREATE INDEX idx_sessions_player_id ON sessions(player_id);
@@ -38,6 +39,10 @@ CREATE INDEX idx_transactions_player_id ON transactions(player_id);
 CREATE INDEX idx_transactions_session_id ON transactions(session_id);
 CREATE INDEX idx_transactions_wallet_id ON transactions(wallet_id);
 
+/*
+ * This function accepts a session_id, an amount, and a transaction_type (either 'withdraw' or 'bet') and processes a withdrawal or bet transaction.
+ * It checks if there are sufficient funds, updates the wallet balance, and creates a new transaction record.
+ */
 CREATE OR REPLACE FUNCTION create_withdraw_transaction(
     p_session_id INTEGER,
     p_amount NUMERIC(15, 2),
@@ -84,6 +89,10 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
+/*
+ * This function accepts a session_id, an amount, and a transaction_type (either 'deposit' or 'win') and processes a deposit or win transaction.
+ * It updates the wallet balance and creates a new transaction record.
+ */
 CREATE OR REPLACE FUNCTION create_deposit_transaction(
     p_session_id INTEGER,
     p_amount NUMERIC(15, 2),
