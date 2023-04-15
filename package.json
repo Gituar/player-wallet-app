@@ -1,31 +1,37 @@
 {
-  "name": "player-wallet-app",
-  "version": "1.0.0",
-  "description": "Backend wallet application for storing balances and allowing bets and wins inside play sessions",
-  "main": "dist/index.js",
-  "scripts": {
-    "start": "node dist/index.js",
-    "build": "tsc",
-    "test": "mocha -r ts-node/register tests/**/*.test.ts"
-  },
-  "license": "MIT License",
-  "private": true,
-  "dependencies": {
-    "body-parser": "^1.20.2",
-    "dotenv": "^16.0.3",
-    "express": "^4.18.2",
-    "express-validator": "6.15.0",
-    "pg-promise": "^11.4.3",
-    "winston": "^3.8.2"
-  },
-  "devDependencies": {
-    "@types/express": "^4.17.17",
-    "@types/mocha": "^10.0.1",
-    "@types/node": "^18.15.11",
-    "chai": "^4.3.7",
-    "mocha": "^10.2.0",
-    "supertest": "^6.3.3",
-    "ts-node": "^10.9.1",
-    "typescript": "^5.0.4"
-  }
+	"name": "player-wallet-app",
+	"version": "1.0.0",
+	"description": "Backend wallet application for storing balances and allowing bets and wins inside play sessions",
+	"main": "src/app.ts",
+	"type": "module",
+	"scripts": {
+		"start": "ts-node src/app.ts",
+		"build": "tsc",
+		"test": "mocha --parallel --require ts-node/register --extensions ts 'tests/**/*.test.ts'"
+	},
+	"license": "MIT License",
+	"private": true,
+	"dependencies": {
+		"body-parser": "^1.20.2",
+		"dotenv": "^16.0.3",
+		"express": "^4.18.2",
+		"express-validator": "6.15.0",
+		"pg-promise": "^11.4.3",
+		"winston": "^3.8.2"
+	},
+	"devDependencies": {
+		"@types/chai": "^4.3.4",
+		"@types/express": "^4.17.17",
+		"@types/mocha": "^10.0.1",
+		"@types/node": "^18.15.11",
+		"@types/supertest": "^2.0.12",
+		"@typescript-eslint/eslint-plugin": "^5.58.0",
+		"@typescript-eslint/parser": "^5.58.0",
+		"chai": "^4.3.7",
+		"eslint": "^8.38.0",
+		"mocha": "^10.2.0",
+		"supertest": "^6.3.3",
+		"ts-node": "^10.9.1",
+		"typescript": "^5.0.4"
+	}
 }
