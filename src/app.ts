@@ -1,6 +1,10 @@
 import express from "express";
 import bodyParser from "body-parser";
 import { Request, Response } from "express";
+import playerRoutes from "./routes/players";
+import walletRoutes from "./routes/wallets";
+import sessionRoutes from "./routes/sessions";
+import transactionRoutes from "./routes/transactions";
 import config from "./config/config";
 import logger from "./config/logger";
 
@@ -9,6 +13,14 @@ const app = express();
 // Middleware
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
+
+// Routes
+app.use("/", walletRoutes);
+app.use("/", sessionRoutes);
+app.use("/", transactionRoutes);
+if (config.developmentMode) {
+	app.use("/players", playerRoutes);
+}
 
 // Default route
 app.get("/", (req: Request, res: Response) => {

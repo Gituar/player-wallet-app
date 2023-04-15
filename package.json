@@ -6,6 +6,7 @@
 	"type": "module",
 	"scripts": {
 		"start": "ts-node src/app.ts",
+		"start:dev": "cross-env NODE_ENV=dev ts-node src/app.ts",
 		"build": "tsc",
 		"test": "mocha --parallel --require ts-node/register --extensions ts 'tests/**/*.test.ts'"
 	},
@@ -28,6 +29,7 @@
 		"@typescript-eslint/eslint-plugin": "^5.58.0",
 		"@typescript-eslint/parser": "^5.58.0",
 		"chai": "^4.3.7",
+		"cross-env": "^7.0.3",
 		"eslint": "^8.38.0",
 		"mocha": "^10.2.0",
 		"supertest": "^6.3.3",
