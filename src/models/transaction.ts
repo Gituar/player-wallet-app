@@ -12,10 +12,10 @@ export interface ITransaction {
 }
 
 export enum TransactionType {
-  'withdraw',
-  'bet',
-  'deposit',
-  'win'
+  deposit = 'deposit',
+  withdraw = 'withdraw',
+  bet = 'bet',
+  win = 'win',
 }
 
 export class TransactionModel {

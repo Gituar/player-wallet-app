@@ -10,24 +10,23 @@ PostgreSQL on your local machine or a remote PostgreSQL server.
 
 To install the application, follow these steps:
 
-1. Clone the repository: `git clone https://github.com/Gituar/player-wallet-app.git`
-2. Install dependencies: `npm install`
-3. Create a new database for example: `createdb player_wallet_app`
-4. Run `psql -d player_wallet_app -f src/db/create.sql`
-5. Set up environment variables: Create a `.env` file based on the `.env.example` file and replace the values with your own.
-6. To seed your database with initial data for testing or development purposes run `psql -d player_wallet_app -f src/db/init.sql`, replacing `player_wallet_app` with the actual name of your database from `.env` file.
-7. You can run tests with `npm test`
+- [ ] 1. Clone the repository: `git clone https://github.com/Gituar/player-wallet-app.git`
+- [ ] 2. Install dependencies: `npm install`
+- [ ] 3. Create a new database for example: `createdb player_wallet_app`
+- [ ] 4. Run `psql -d player_wallet_app -f src/db/create.sql`
+- [ ] 5. Set up environment variables: Create a `.env` file based on the `.env.example` file and replace the values with your own.
+- [ ] 6. To seed your database with initial data for testing or development purposes run `psql -d player_wallet_app -f src/db/init.sql`, replacing `player_wallet_app` with the actual name of your database from `.env` file.
+- [ ] 7. You can run tests with `npm test`
 
 ## Usage
 
-Start the application: `npm start`
+Start the application: `npm start`<br/>
+<sup>During development you can run the app with `npm run start:dev` which provides extra API endpoints</sup>
 
 The application exposes the following endpoints:
 
 - `POST /players/:playerId/wallet`: Create a new wallet for a player.
-- `GET /players/:playerId/wallet`: Get the wallet of a player.
 - `POST /players/:playerId/sessions`: Create a new play session for a player.
-- `GET /players/:playerId/sessions`: Get all play sessions for a player.
 - `POST /sessions/:sessionId/withdrawals`: Make a withdrawal or bet transaction within a session.
 - `POST /sessions/:sessionId/deposits`: Make a deposit or win transaction within a play session.
 - `GET /players/:playerId/transactions`: Retrieve all transactions for a player.

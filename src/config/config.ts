@@ -17,6 +17,7 @@ const config = {
 		level: process.env.LOG_LEVEL || "info",
 		filePath: process.env.LOG_FILE_PATH || "./logs/app.log",
 	},
+	developmentMode: process.env.NODE_ENV === "dev",
 };
 
 export default config;
