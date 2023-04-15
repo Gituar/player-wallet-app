@@ -5,9 +5,9 @@
     /* Basic Options */
     // "incremental": true,                         /* Enable incremental compilation */
     // "target": "es5",                             /* Specify ECMAScript target version: 'ES3' (default), 'ES5', 'ES2015', 'ES2016', 'ES2017', 'ES2018', 'ES2019', 'ES2020', or 'ESNEXT'. */
-    "target": "esnext",
+    "target": "ESNext",
     // "module": "commonjs",                        /* Specify module code generation: 'none', 'commonjs', 'amd', 'system', 'umd', 'es2015', 'es2020', or 'ESNext'. */
-    "module": "esnext",
+    "module": "ESNext",
     // "lib": [],                                   /* Specify library files to be included in the compilation. */
     // "allowJs": true,                             /* Allow javascript files to be compiled. */
     // "checkJs": true,                             /* Report errors in .js files. */
@@ -78,8 +78,13 @@
     // "skipLibCheck": true,                        /* Skip type checking of declaration files. */
     "forceConsistentCasingInFileNames": true,       /* Disallow inconsistently-cased references to the same file. */
   
-    // "resolveJsonModule": true,                   /* Allows importing modules with a ‘.json’ extension, which is a common practice in node projects. This includes generating a type for the import based on the static JSON shape. */
-    "watch": true
+    "resolveJsonModule": true,                      /* Allows importing modules with a ‘.json’ extension, which is a common practice in node projects. This includes generating a type for the import based on the static JSON shape. */
+    // "watch": true
+  },
+  // ts-node settings
+  "ts-node": {
+    "esm": true,
+    "experimentalSpecifierResolution": "node"
   },
   "exclude": [
       "node_modules",
