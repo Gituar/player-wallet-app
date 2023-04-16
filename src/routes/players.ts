@@ -2,11 +2,12 @@ import express, { Request, Response } from "express";
 import { PlayerModel } from "../models/player";
 import { validationResult } from "express-validator";
 import { playerValidationRules } from "../validators/playerValidator";
+import { authMiddleware } from "../middleware/authMiddleware";
 
 const router = express.Router();
 
 // Get all players
-router.get("/", async (_req: Request, res: Response) => {
+router.get("/", authMiddleware, async (_req: Request, res: Response) => {
 	try {
 		const players = await PlayerModel.findAll();
 		res.json(players);
@@ -16,10 +17,11 @@ router.get("/", async (_req: Request, res: Response) => {
 });
 
 // Create a new player
-router.post("/", playerValidationRules(), async (req: Request, res: Response) => {
+router.post("/", authMiddleware, playerValidationRules(), async (req: Request, res: Response) => {
 	const errors = validationResult(req);
 	if (!errors.isEmpty()) {
-		return res.status(400).json({ errors: errors.array() });
+		const statusCode = errors.array()[0].msg.statusCode || 400;
+		return res.status(statusCode).json({ errors: errors.array() });
 	}
 
 	const { name } = req.body;

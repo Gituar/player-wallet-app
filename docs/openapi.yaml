@@ -7,6 +7,8 @@ info:
   description: API for managing player wallets and play sessions.
 servers:
   - url: http://localhost:3000/
+security:
+  - bearerAuth: []
 paths:
   /players/{playerId}/wallet:
     post:
@@ -19,58 +21,23 @@ paths:
             minimum: 1
           required: true
           description: ID of the player to create a wallet for
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                balance:
-                  type: number
-                  format: float
-                  minimum: 0
-                  description: Initial balance of the wallet
-              required:
-                - balance
-            example:
-              balance: 20.00
       responses:
         '201':
           description: Created
-        '400':
-          description: Bad request
-        '500':
-          description: Internal server error
-    get:
-      summary: Get the wallet of a player
-      parameters:
-        - in: path
-          name: playerId
-          schema:
-            type: integer
-            minimum: 1
-          required: true
-          description: ID of the player to get the wallet for
-      responses:
-        '200':
-          description: OK
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  id:
-                    type: integer
-                    description: ID of the wallet
-                    example: 1
-                  balance:
-                    type: number
-                    format: float
-                    minimum: 0
-                    description: Current balance of the wallet
+                $ref: '#/components/schemas/Wallet'
+        '400':
+          description: Bad request
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
         '404':
-          description: Not found
+          description: Not Found
+        '409':
+          description: Conflict
         '500':
           description: Internal server error
   /players/{playerId}/sessions:
@@ -87,31 +54,18 @@ paths:
       responses:
         '201':
           description: Created
-        '400':
-          description: Bad request
-        '500':
-          description: Internal server error
-    get:
-      summary: Get the play sessions of a player
-      parameters:
-        - in: path
-          name: playerId
-          schema:
-            type: integer
-            minimum: 1
-          required: true
-          description: ID of the player to get the sessions for
-      responses:
-        '200':
-          description: OK
           content:
             application/json:
               schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/Session'
+                $ref: '#/components/schemas/Session'
+        '400':
+          description: Bad request
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
         '404':
-          description: Not found
+          description: Not Found
         '500':
           description: Internal server error
   /sessions/{sessionId}/withdrawals:
@@ -139,10 +93,18 @@ paths:
       responses:
         '201':
           description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Transaction'
         '400':
           description: Bad request
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
         '404':
-          description: Not found
+          description: Not Found
         '500':
           description: Internal server error
   /sessions/{sessionId}/deposits:
@@ -170,10 +132,18 @@ paths:
       responses:
         '201':
           description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Transaction'
         '400':
           description: Bad request
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
         '404':
-          description: Not found
+          description: Not Found
         '500':
           description: Internal server error
   /players/{playerId}/transactions:
@@ -196,8 +166,14 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/Transaction'
+        '400':
+          description: Bad request
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
         '404':
-          description: Not found
+          description: Not Found
         '500':
           description: Internal server error
   /sessions/{sessionId}/transactions:
@@ -220,8 +196,14 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/Transaction'
+        '400':
+          description: Bad request
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
         '404':
-          description: Not found
+          description: Not Found
         '500':
           description: Internal server error
 components:
@@ -260,6 +242,23 @@ components:
       required:
         - amount
         - type
+    Wallet:
+      type: object
+      properties:
+        id:
+          type: integer
+          minimum: 1
+          description: ID of the wallet
+        player_id:
+          type: integer
+          minimum: 1
+          description: ID of the player
+        balance:
+          type: string
+          format: float
+          minimum: 0
+          description: Initial balance of the wallet
+          example: '0.00'
     Transaction:
       type: object
       properties:
@@ -267,34 +266,34 @@ components:
           type: integer
           description: ID of the transaction
           example: 1
-        playerId:
+        player_id:
           type: integer
           description: ID of the player
           example: 1
-        walletId:
-          type: integer
-          description: ID of the wallet
-          example: 1
-        sessionId:
+        session_id:
           type: integer
           description: ID of the play session the transaction belongs to
           example: 1
+        wallet_id:
+          type: integer
+          description: ID of the wallet
+          example: 1
+        amount:
+          type: string
+          format: float
+          description: Amount of the transaction
+          example: '5.00'
         type:
           type: string
           enum: [withdraw, bet, deposit, win]
           description: Type of the transaction
           example: deposit
-        amount:
-          type: number
-          format: float
-          description: Amount of the transaction
-          example: 5.0
         balance:
-          type: number
+          type: string
           format: float
           description: Balance after the transaction
-          example: 20.0
-        timestamp:
+          example: '20.00'
+        created_at:
           type: string
           format: date-time
           description: Timestamp of the transaction
@@ -306,17 +305,22 @@ components:
           type: integer
           description: ID of the session
           example: 1
-        playerId:
+        player_id:
           type: integer
           description: ID of the player
           example: 1
-        startTime:
+        created_at:
           type: string
           format: date-time
           description: Start time of the session
           example: '2023-04-13T10:00:00.000Z'
-        endTime:
+        ended_at:
           type: string
           format: date-time
           description: End time of the session (null if ongoing)
           example: '2023-04-13T12:00:00.000Z'
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
