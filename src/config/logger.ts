@@ -7,6 +7,10 @@ const customFormat = printf(({ level, message, timestamp }) => {
 	return `${timestamp} [${level.toUpperCase()}]: ${message}`;
 });
 
+const consoleTransport = new transports.Console();
+const fileTransport = new transports.File({ filename: config.log.filePath });
+const loggerTransports = config.developmentMode ? [consoleTransport] : [consoleTransport, fileTransport];
+
 const logger = createLogger({
 	level: config.log.level,
 	format: combine(
@@ -15,10 +19,7 @@ const logger = createLogger({
 		}),
 		customFormat
 	),
-	transports: [
-		new transports.Console(),
-		new transports.File({ filename: config.log.filePath }),
-	],
+	transports: loggerTransports,
 });
 
 export default logger;

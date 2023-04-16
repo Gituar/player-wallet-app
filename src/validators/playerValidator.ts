@@ -2,6 +2,7 @@ import { body } from "express-validator";
 
 export const playerValidationRules = () => {
 	return [
+		// Validate the 'name' field
 		body("name")
 			.trim()
 			.notEmpty()
